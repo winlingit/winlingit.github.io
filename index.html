@@ -1,1 +1,86 @@
-Hello World
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>W209 HW3 - Winston LIn</title>
+        <link rel="stylesheet" type="text/css" href="./hw3.css">
+        <script type="text/javascript" src="d3/d3.js"></script>
+    </head>
+    <body>
+        <script type="text/javascript">
+            var dataset = [22,16,37,28,23,25,16,45,24,40,50,24,31,30,18,36,20,26,30,33,21,27,11,33,30,23,40,26,33,27,39,15,33,29,26,32,24,41,30,40,38];    // global var for data: James Harden's points for 15-16 Rockets home games
+            var w = 900;
+            var h = 300;
+            var barPadding = 2;
+            var barWidth = w / dataset.length - barPadding;
+            var barScale = 5;
+
+            var game_id = new Array(41);
+            for (var i = 1; i <= 41; i++) {
+                game_id.push(i);
+            }
+
+            // *** Could not iterate through data with enter()...
+            // d3.csv("harden_game_stats_1516.csv", function(error, data) {
+            //     if (error) {    // if error is not null, log error
+            //         console.log(error);
+            //     } else {        // if no error, log data
+            //         console.log(data);
+            //         dataset = data;
+            //     }
+            // });
+
+            var svg = d3.select("body")
+                        .append("svg")
+                        .attr("width", w)
+                        .attr("height", h);
+
+            var bars = svg.selectAll("rect")
+                        .data(dataset)
+                        .enter()
+                        .append("rect")
+                        .attr("class", "bar")
+                        .attr("x", function(d, i) { return i * (w / dataset.length); })
+                        .attr("y", function(d) { return h - (d * barScale); })
+                        .attr("width", barWidth)
+                        .attr("height", function (d) { return d * barScale; });
+
+            var title = svg.append("text")
+                            .attr("class", "svg_title")
+                            .text("Points Scored by James Harden | Houston Rockets Home Games in 15-16 Season")
+                            .attr("x", w / 2)
+                            .attr("y", 10);
+
+
+            var labels = svg.selectAll("text")
+                            .data(dataset)
+                            .enter()
+                            .append("text")
+                            .attr("class", "label")
+                            .text(function(d) { return d; })
+                            .attr("x", function(d, i) { return i * (barWidth + barPadding) + barWidth / 2; })
+                            .attr("y", function(d) { return h - (d * barScale) + 15; });
+
+            var scale = d3.scaleOrdinal(game_id);
+
+            var xAxis = d3.svg.axis()
+                            .scale(xScale)
+                            .orient("bottom");
+
+            svg.append("g")
+                .call(xAxis);
+                
+
+                // *** Did not work for some reason...
+                // .attr({
+                //     x: function(d, i) { return i * (w / dataset.length); },
+                //     y: function(d) { return h - (d * barScale); },
+                //     width: w / dataset.length - barPadding,
+                //     height: function (d) { return d * barScale; },
+                //     fill: function(d) { return "rgb(0, 0, " + (d * 10) + ")"; }
+                // });
+
+
+        </script>
+    </body>
+</html>
